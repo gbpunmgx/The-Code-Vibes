@@ -19,3 +19,31 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+@keyframes glow {
+  0% {
+    text-shadow: 0 0 10px rgba(45, 63, 221, 0.8),
+                 0 0 20px rgba(32, 110, 17, 0.6),
+                 0 0 30px rgba(196, 71, 40, 0.4);
+  }
+  50% {
+    text-shadow: 0 0 20px rgb(0, 255, 128),
+                 0 0 40px rgba(0, 127, 255, 1),
+                 0 0 60px rgb(98, 214, 156);
+  }
+  100% {
+    text-shadow: 0 0 10px rgba(39, 17, 165, 0.8),
+                 0 0 20px rgba(112, 159, 206, 0.6),
+                 0 0 30px rgba(0, 255, 127, 0.4);
+  }
+}
+
+.animate-glow {
+  animation: glow 1s infinite alternate;
+}
+
+@layer components {
+  .card-hover:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+}

@@ -34,3 +34,41 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+my-nextjs-app/
+├── app/
+│   ├── dashboard/       # DashboardCard feature
+│   │   ├── components/  # DashboardCard-specific components
+│   │   │   └── Widget.tsx
+│   │   ├── page.tsx     # DashboardCard page
+│   │   ├── styles.css   # DashboardCard-specific styles
+│   │   └── utils.ts     # DashboardCard-specific utility functions
+│   ├── signin/          # Sign-In feature
+│   │   ├── components/  # Sign-In-specific components
+│   │   │   └── Form.tsx
+│   │   ├── page.tsx     # Sign-In page
+│   │   └── styles.css   # Sign-In-specific styles
+│   ├── layout.tsx       # Global layout
+│   ├── globals.css      # Global styles
+│   └── favicon.ico      # Favicon
+├── components/          # Reusable global components
+│   ├── Header.tsx       # Header component
+│   ├── Footer.tsx       # Footer component
+│   └── ThemeToggle.tsx  # Example: Theme toggle button
+├── public/              # Static assets
+│   ├── images/          # Images
+│   │   └── logo.png
+│   └── fonts/           # Custom fonts
+│       └── OpenSans.ttf
+├── styles/              # Global styles
+│   ├── variables.css    # CSS variables
+│   ├── mixins.css       # Reusable CSS mixins
+│   └── utilities.css    # Utility classes
+├── utils/               # Global utility functions
+│   ├── fetcher.ts       # Fetch wrapper for API calls
+│   ├── constants.ts     # Global constants
+│   └── helpers.ts       # Global helper functions
+├── middleware.ts        # Middleware for API routes
+├── next.config.js       # Next.js configuration
+├── package.json         # Dependencies and scripts
+└── tsconfig.json        # TypeScript configuration

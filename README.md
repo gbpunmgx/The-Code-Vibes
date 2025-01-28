@@ -16,7 +16,7 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+You can start editing the page by modifying `app/SetUpSubFeaturesItem.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
@@ -40,13 +40,13 @@ my-nextjs-app/
 │   ├── dashboard/       # DashboardCard feature
 │   │   ├── components/  # DashboardCard-specific components
 │   │   │   └── Widget.tsx
-│   │   ├── page.tsx     # DashboardCard page
+│   │   ├── SetUpSubFeaturesItem.tsx     # DashboardCard page
 │   │   ├── styles.css   # DashboardCard-specific styles
 │   │   └── utils.ts     # DashboardCard-specific utility functions
 │   ├── signin/          # Sign-In feature
 │   │   ├── components/  # Sign-In-specific components
 │   │   │   └── Form.tsx
-│   │   ├── page.tsx     # Sign-In page
+│   │   ├── SetUpSubFeaturesItem.tsx     # Sign-In page
 │   │   └── styles.css   # Sign-In-specific styles
 │   ├── layout.tsx       # Global layout
 │   ├── globals.css      # Global styles

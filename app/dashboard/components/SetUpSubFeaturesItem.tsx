@@ -1,14 +1,13 @@
 import React, { JSX } from "react";
-import {
-  subFeatures,
-  features,
-} from "@/app/dashboard/models/FeaturesDataProvider";
+import AddProduct from "@/app/product/AddProduct";
+import { subFeatures } from "@/app/dashboard/models/FeaturesDataProvider";
+import OrderTable from "@/app/product/OrderTable";
 
 interface AddProductProps {
   selectedSubFeature: string | null;
 }
 
-const AddProduct: React.FC<AddProductProps> = ({ selectedSubFeature }) => {
+const FeatureContent: React.FC<AddProductProps> = ({ selectedSubFeature }) => {
   if (!selectedSubFeature) {
     return (
       <div className="p-4 text-gray-600">
@@ -26,7 +25,6 @@ const AddProduct: React.FC<AddProductProps> = ({ selectedSubFeature }) => {
   }
 
   const featureContentLookup: { [key: string]: JSX.Element } = {
-    // Dashboard Sub-Features
     overview: <div className="p-6">This is the UI for Overview</div>,
     sales: <div className="p-6">This is the UI for Sales</div>,
     traffic: <div className="p-6">This is the UI for Traffic</div>,
@@ -34,7 +32,9 @@ const AddProduct: React.FC<AddProductProps> = ({ selectedSubFeature }) => {
     // Products Sub-Features
     "product-list": <div className="p-6">This is the UI for Product List</div>,
     "add-product": (
-      <div className="p-6">This is the UI for Adding a Product</div>
+      <div className="p-6">
+        <AddProduct />
+      </div>
     ),
     inventory: (
       <div className="p-6">This is the UI for Inventory Management</div>
@@ -44,7 +44,11 @@ const AddProduct: React.FC<AddProductProps> = ({ selectedSubFeature }) => {
     ),
 
     // Orders Sub-Features
-    "all-orders": <div className="p-6">This is the UI for All Orders</div>,
+    "all-orders": (
+      <div className="p-6">
+        <OrderTable />
+      </div>
+    ),
     "pending-orders": (
       <div className="p-6">This is the UI for Pending Orders</div>
     ),
@@ -114,10 +118,10 @@ const AddProduct: React.FC<AddProductProps> = ({ selectedSubFeature }) => {
   );
 
   return (
-    <div className="p-4 border rounded-2xl bg-white">
+    <div className="p-4 border rounded-2xl bg-white overflow-y-auto h-full">
       {renderFeatureUI}
     </div>
   );
 };
 
-export default AddProduct;
+export default FeatureContent;

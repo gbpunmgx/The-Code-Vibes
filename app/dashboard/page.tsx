@@ -1,8 +1,8 @@
-"use client";
+"use client";  // Add this directive at the top of the file
 
 import { useState, useEffect } from "react";
 import React from "react";
-import AddProduct from "@/app/dashboard/components/SetUpSubFeaturesItem";
+import SetUpSubFeaturesItem from "@/app/dashboard/components/SetUpSubFeaturesItem";
 import { features, subFeatures } from "@/app/dashboard/models/FeaturesDataProvider";
 import StickyHeader from "@/app/dashboard/components/StickyHeader";
 import { Menu } from "lucide-react";
@@ -27,7 +27,6 @@ const DashboardPage = () => {
     }, [features, subFeatures]);
 
     const handleFeatureClick = (featureId: string) => {
-
         setActiveFeature(featureId);
         setSelectedFeature(featureId);
         const defaultSubFeature = subFeatures[featureId][0]?.id || null;
@@ -46,6 +45,7 @@ const DashboardPage = () => {
 
     return (
         <div className="min-h-screen flex">
+            {/* Sidebar */}
             <div className="sticky top-0 w-20 bg-[#F0F4F7] text-black flex flex-col items-center p-4">
                 <div
                     onClick={() => showAndHideSubFeatures(!isShow)}
@@ -53,10 +53,6 @@ const DashboardPage = () => {
                 >
                     <div className="group-hover:text-white text-gray-800">
                         <Menu size={24} />
-                    </div>
-
-                    <div className="absolute left-20 bg-gray-700 text-white text-sm px-2 py-1 rounded-md hidden group-hover:block">
-                        {"Home"}
                     </div>
                 </div>
 
@@ -78,21 +74,28 @@ const DashboardPage = () => {
                         >
                             {feature.icon}
                         </div>
-                        <div className="absolute left-20 bg-gray-700 text-white text-sm px-2 py-1 rounded-md hidden group-hover:block">
+
+                        {/* Tooltip shown only on hover */}
+                        <div
+                            className={`absolute left-20 bg-gray-700 text-white text-sm px-2 py-1 rounded-md group-hover:block ${
+                                selectedFeature === feature.id ? "block" : "hidden"
+                            }`}
+                        >
                             {feature.name}
                         </div>
                     </div>
                 ))}
             </div>
 
+            {/* Main Content */}
             {isShow && (
                 <div className="sticky top-0 w-72 bg-white text-black p-6 flex flex-col border-r border-gray-300">
                     <div className="mb-6 flex items-center">
                         <h1 className="text-2xl font-bold">
                             MULTI{" "}
                             <span className="bg-gradient-to-r from-pink-500 via-blue-500 to-green-500 bg-clip-text text-transparent text-4xl animate-glow">
-                X
-              </span>
+                                X
+                            </span>
                         </h1>
                     </div>
                     <h2 className="text-lg font-semibold mb-4 capitalize">{activeFeature}</h2>
@@ -126,22 +129,24 @@ const DashboardPage = () => {
                                             : "group-hover:text-white text-gray-800"
                                     }`}
                                 >
-                  {subFeature.name}
-                </span>
+                                    {subFeature.name}
+                                </span>
                             </button>
                         ))}
                     </div>
                 </div>
             )}
 
+            {/* Scrollable Content */}
             <div className="flex flex-col flex-grow">
                 <StickyHeader />
-                <div className="flex-grow bg-[#F0F4F7] p-8 m-4 rounded-2xl shadow-md">
+                <div className="flex-grow bg-[#F0F4F7] p-8 m-4 rounded-2xl shadow-md overflow-y-auto">
                     <h1 className="text-3xl font-semibold text-black mb-6">
                         {`${activeFeature?.toUpperCase()} / ${selectedSubFeature?.toUpperCase()}`}
                     </h1>
 
-                    <AddProduct selectedSubFeature={selectedSubFeature} />
+                    {/* Scrollable component */}
+                    <SetUpSubFeaturesItem selectedSubFeature={selectedSubFeature} />
                 </div>
             </div>
         </div>

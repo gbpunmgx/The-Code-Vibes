@@ -1,16 +1,13 @@
-import { ApiResponseBase } from './ApiResponseBase';
+export class ApiResponseListBase<T> {
+    status: number;
+    message: string;
+    result: T[];
 
-export class ApiResponseListBase<T> extends ApiResponseBase<T[]> {
-    constructor(type: string, status: number, message: string, result: T[]) {
-        super(type, status, message, result);
-    }
-
-    static fromJson<T>(json: any, transformResult: (result: any) => T[]): ApiResponseListBase<T> {
-        return new ApiResponseListBase<T>(
-            json.type,
-            json.status,
-            json.message,
-            transformResult(json.result)
-        );
+    static fromJson<T>(json: any, transform: (item: any) => T): ApiResponseListBase<T> {
+        return {
+            status: json.status,
+            message: json.message,
+            result: json.result.map(transform),
+        };
     }
 }

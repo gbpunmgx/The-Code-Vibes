@@ -1,100 +1,266 @@
-import React from "react";
+import { useState } from "react";
+import { create } from "zustand";
+import { X } from "lucide-react";
 
-const UserProfileForm = () => {
+// Define types for user
+interface User {
+    id: number;
+    email: string;
+    username: string;
+    firstName: string;
+    lastName: string;
+    role: string;
+}
+
+// Zustand store for managing users
+const useUserStore = create<{
+    users: User[];
+    addUser: (user: User) => void;
+    updateUser: (updatedUser: User) => void;
+    deleteUser: (id: number) => void;
+}>((set) => ({
+    users: [
+        {
+            id: 1,
+            email: "john.doe@example.com",
+            username: "johndoe",
+            firstName: "John",
+            lastName: "Doe",
+            role: "admin",
+        },
+        {
+            id: 2,
+            email: "jane.smith@example.com",
+            username: "janesmith",
+            firstName: "Jane",
+            lastName: "Smith",
+            role: "user",
+        },{
+            id: 3,
+            email: "jane.smith@example.com",
+            username: "janesmith",
+            firstName: "Jane",
+            lastName: "Smith",
+            role: "user",
+        },
+    ],
+    addUser: (user) => set((state) => ({ users: [...state.users, user] })),
+    updateUser: (updatedUser) =>
+        set((state) => ({
+            users: state.users.map((user) =>
+                user.id === updatedUser.id ? updatedUser : user
+            ),
+        })),
+    deleteUser: (id) =>
+        set((state) => ({ users: state.users.filter((user) => user.id !== id) })),
+}));
+
+const UserProfile = () => {
+    const { users, addUser, updateUser, deleteUser } = useUserStore();
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+    const [editData, setEditData] = useState<User | null>(null);
+
+    const openModal = (user: User | null = null) => {
+        setEditData(user);
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setEditData(null);
+    };
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        const form = e.target as HTMLFormElement;
+
+        const email = (form.elements.namedItem("email") as HTMLInputElement).value;
+        const username = (
+            form.elements.namedItem("username") as HTMLInputElement
+        ).value;
+        const firstName = (
+            form.elements.namedItem("first-name") as HTMLInputElement
+        ).value;
+        const lastName = (
+            form.elements.namedItem("last-name") as HTMLInputElement
+        ).value;
+        const role = (form.elements.namedItem("role") as HTMLSelectElement).value;
+
+        const user = { id: Date.now(), email, username, firstName, lastName, role };
+
+        if (editData) {
+            updateUser({ ...editData, email, username, firstName, lastName, role });
+        } else {
+            addUser(user);
+        }
+
+        closeModal();
+    };
+
     return (
-        <div className="max-w-4xl mx-auto px-4 py-8 bg-gray-50 dark:bg-gray-800 rounded-lg shadow-md">
-            <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">
-                User Profile
-            </h2>
-
-            <div className="mb-4">
-                <label
-                    htmlFor="input-group-1"
-                    className="block text-sm font-medium text-gray-700 dark:text-white"
+        <div className="p-6">
+            <div className="flex justify-between items-center mb-6">
+                <h1 className="text-xl font-semibold">User Profiles</h1>
+                <button
+                    className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+                    onClick={() => openModal()}
                 >
-                    Your Email
-                </label>
-                <input
-                    type="email"
-                    id="input-group-1"
-                    className="w-full mt-2 p-2.5 border rounded-lg border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="name@flowbite.com"
-                />
+                    Add User
+                </button>
             </div>
 
-            <div className="mb-4">
-                <label
-                    htmlFor="username"
-                    className="block text-sm font-medium text-gray-700 dark:text-white"
-                >
-                    Username
-                </label>
-                <input
-                    type="text"
-                    id="username"
-                    className="w-full mt-2 p-2.5 border rounded-lg border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="elonmusk"
-                />
-            </div>
-
-            <div className="flex space-x-4 mb-4">
-                <div className="flex-1">
-                    <label
-                        htmlFor="first-name"
-                        className="block text-sm font-medium text-gray-700 dark:text-white"
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {users.map((user) => (
+                    <div
+                        key={user.id}
+                        className="bg-white shadow-md rounded-lg overflow-hidden border border-gray-200"
                     >
-                        First Name
-                    </label>
-                    <input
-                        type="text"
-                        id="first-name"
-                        className="w-full mt-2 p-2.5 border rounded-lg border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        placeholder="John"
-                    />
-                </div>
-
-                <div className="flex-1">
-                    <label
-                        htmlFor="last-name"
-                        className="block text-sm font-medium text-gray-700 dark:text-white"
-                    >
-                        Last Name
-                    </label>
-                    <input
-                        type="text"
-                        id="last-name"
-                        className="w-full mt-2 p-2.5 border rounded-lg border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        placeholder="Doe"
-                    />
-                </div>
+                        <div className="p-6">
+                            <h3 className="text-xl font-semibold text-gray-900">{user.username}</h3>
+                            <p className="text-sm text-gray-500">{user.email}</p>
+                            <p className="text-sm text-gray-500">Role: {user.role}</p>
+                            <div className="mt-4 flex space-x-4">
+                                <button
+                                    className="text-blue-600 hover:text-blue-800"
+                                    onClick={() => openModal(user)}
+                                >
+                                    Edit
+                                </button>
+                                <button
+                                    className="text-red-600 hover:text-red-800"
+                                    onClick={() => deleteUser(user.id)}
+                                >
+                                    Delete
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                ))}
             </div>
 
-            <div className="mb-4">
-                <label
-                    htmlFor="role"
-                    className="block text-sm font-medium text-gray-700 dark:text-white"
-                >
-                    Role
-                </label>
-                <select
-                    id="role"
-                    className="w-full mt-2 p-2.5 border rounded-lg border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                >
-                    <option value="admin">Admin</option>
-                    <option value="moderator">Moderator</option>
-                    <option value="user">User</option>
-                    <option value="guest">Guest</option>
-                </select>
-            </div>
+            {isModalOpen && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                    <div className="bg-white p-8 rounded-lg shadow-lg w-[700px] max-w-full">
+                        <div className="flex justify-between items-center mb-6">
+                            <h2 className="text-2xl font-semibold">
+                                {editData ? "Edit User" : "Add User"}
+                            </h2>
+                            <button
+                                className="text-gray-500 hover:text-white p-2 rounded hover:bg-gray-700"
+                                onClick={closeModal}
+                            >
+                                <X className="h-6 w-6" />
+                            </button>
+                        </div>
 
-            <button
-                type="submit"
-                className="w-full mt-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-700 dark:hover:bg-blue-400"
-            >
-                Save Profile
-            </button>
+                        <form onSubmit={handleSubmit}>
+                            <div className="mb-4">
+                                <label
+                                    htmlFor="email"
+                                    className="block text-sm font-medium text-gray-700"
+                                >
+                                    Your Email
+                                </label>
+                                <input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    defaultValue={editData ? editData.email : ""}
+                                    required
+                                    className="w-full mt-2 p-2.5 border rounded-lg"
+                                    placeholder="name@domain.com"
+                                />
+                            </div>
+
+                            <div className="mb-4">
+                                <label
+                                    htmlFor="username"
+                                    className="block text-sm font-medium text-gray-700"
+                                >
+                                    Username
+                                </label>
+                                <input
+                                    type="text"
+                                    id="username"
+                                    name="username"
+                                    defaultValue={editData ? editData.username : ""}
+                                    required
+                                    className="w-full mt-2 p-2.5 border rounded-lg"
+                                    placeholder="johndoe"
+                                />
+                            </div>
+
+                            <div className="mb-4 flex space-x-4">
+                                <div className="flex-1">
+                                    <label
+                                        htmlFor="first-name"
+                                        className="block text-sm font-medium text-gray-700"
+                                    >
+                                        First Name
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="first-name"
+                                        name="first-name"
+                                        defaultValue={editData ? editData.firstName : ""}
+                                        required
+                                        className="w-full mt-2 p-2.5 border rounded-lg"
+                                        placeholder="John"
+                                    />
+                                </div>
+
+                                <div className="flex-1">
+                                    <label
+                                        htmlFor="last-name"
+                                        className="block text-sm font-medium text-gray-700"
+                                    >
+                                        Last Name
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="last-name"
+                                        name="last-name"
+                                        defaultValue={editData ? editData.lastName : ""}
+                                        required
+                                        className="w-full mt-2 p-2.5 border rounded-lg"
+                                        placeholder="Doe"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="mb-4">
+                                <label
+                                    htmlFor="role"
+                                    className="block text-sm font-medium text-gray-700"
+                                >
+                                    Role
+                                </label>
+                                <select
+                                    id="role"
+                                    name="role"
+                                    defaultValue={editData ? editData.role : "user"}
+                                    required
+                                    className="w-full mt-2 p-2.5 border rounded-lg"
+                                >
+                                    <option value="admin">Admin</option>
+                                    <option value="moderator">Moderator</option>
+                                    <option value="user">User</option>
+                                    <option value="guest">Guest</option>
+                                </select>
+                            </div>
+
+                            <button
+                                type="submit"
+                                className="w-full mt-6 py-2.5 bg-blue-600 text-white rounded-lg"
+                            >
+                                {editData ? "Update User" : "Add User"}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
 
-export default UserProfileForm;
+export default UserProfile;

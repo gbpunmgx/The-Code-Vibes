@@ -9,7 +9,7 @@ import {
     Phone,
     FileText,
     DollarSign,
-    Truck,
+    Truck,ShieldAlert
 } from "lucide-react";
 
 const features = [
@@ -19,6 +19,7 @@ const features = [
     { id: "customers", name: "Customers", icon: <Users size={24} /> },
     { id: "analytics", name: "Analytics", icon: <BarChart size={24} /> },
     { id: "marketing", name: "Marketing", icon: <Mail size={24} /> },
+    { id: "user", name: "User", icon: <Users size={24} /> },
     { id: "settings", name: "Settings", icon: <Settings size={24} /> },
 ];
 
@@ -57,6 +58,11 @@ const subFeatures = {
         { id: "discount-coupons", name: "Discount Coupons", icon: <DollarSign size={20} /> },
         { id: "referral-program", name: "Referral Program", icon: <Users size={20} /> },
     ],
+    user: [
+        { id: "user", name: "User", icon: <Users size={20} /> },
+        { id: "role", name: "Role", icon: <ShieldAlert size={20} /> },
+    ],
+
     settings: [
         { id: "site-settings", name: "Site Settings", icon: <Settings size={20} /> },
         { id: "payment-settings", name: "Payment Settings", icon: <DollarSign size={20} /> },

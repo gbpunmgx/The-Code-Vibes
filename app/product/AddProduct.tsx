@@ -16,7 +16,7 @@ export default function AddProductDialog() {
     const [productList, setProductList] = useState<Array<{ name: string, description: string, price: string, category: string, images: File[] }>>([]);
 
     const handleImagesChange = (e: any) => {
-        setProductImages(Array.from(e.target.files)); // Convert file list to an array
+        setProductImages(Array.from(e.target.files));
     };
 
     const handleAddProduct = () => {

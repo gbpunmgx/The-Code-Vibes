@@ -35,13 +35,6 @@ const useUserStore = create<{
             firstName: "Jane",
             lastName: "Smith",
             role: "user",
-        },{
-            id: 3,
-            email: "jane.smith@example.com",
-            username: "janesmith",
-            firstName: "Jane",
-            lastName: "Smith",
-            role: "user",
         },
     ],
     addUser: (user) => set((state) => ({ users: [...state.users, user] })),
@@ -61,6 +54,7 @@ const UserProfile = () => {
     const [editData, setEditData] = useState<User | null>(null);
 
     const openModal = (user: User | null = null) => {
+        console.log("Opening Modal with:", user);
         setEditData(user);
         setIsModalOpen(true);
     };
@@ -86,15 +80,26 @@ const UserProfile = () => {
         ).value;
         const role = (form.elements.namedItem("role") as HTMLSelectElement).value;
 
-        const user = { id: Date.now(), email, username, firstName, lastName, role };
+        const user = { id: editData ? editData.id : Date.now(), email, username, firstName, lastName, role };
+
+        console.log("Form data submitted:", user);
 
         if (editData) {
-            updateUser({ ...editData, email, username, firstName, lastName, role });
+            // Update existing user
+            console.log("Updating user:", editData);
+            updateUser(user);
         } else {
+            // Add new user
+            console.log("Adding new user:", user);
             addUser(user);
         }
 
         closeModal();
+    };
+
+    const handleDelete = (id: number) => {
+        deleteUser(id);
+        console.log("Deleted user with ID:", id);
     };
 
     return (
@@ -102,7 +107,7 @@ const UserProfile = () => {
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-xl font-semibold">User Profiles</h1>
                 <button
-                    className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+                    className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition duration-300 ease-in-out transform hover:scale-105"
                     onClick={() => openModal()}
                 >
                     Add User
@@ -113,22 +118,25 @@ const UserProfile = () => {
                 {users.map((user) => (
                     <div
                         key={user.id}
-                        className="bg-white shadow-md rounded-lg overflow-hidden border border-gray-200"
+                        className="bg-white shadow-md rounded-lg overflow-hidden border border-gray-200 transform hover:scale-105 transition duration-300"
                     >
                         <div className="p-6">
                             <h3 className="text-xl font-semibold text-gray-900">{user.username}</h3>
                             <p className="text-sm text-gray-500">{user.email}</p>
                             <p className="text-sm text-gray-500">Role: {user.role}</p>
-                            <div className="mt-4 flex space-x-4">
+
+                            <div className="mt-4 flex justify-end space-x-4">
+                                {/* Edit Button */}
                                 <button
-                                    className="text-blue-600 hover:text-blue-800"
+                                    className="text-blue-600 hover:text-blue-800 px-4 py-2 rounded-lg border border-blue-600 hover:bg-blue-100 transition duration-300 transform hover:scale-105"
                                     onClick={() => openModal(user)}
                                 >
                                     Edit
                                 </button>
+                                {/* Delete Button */}
                                 <button
-                                    className="text-red-600 hover:text-red-800"
-                                    onClick={() => deleteUser(user.id)}
+                                    className="text-red-600 hover:text-red-800 px-4 py-2 rounded-lg border border-red-600 hover:bg-red-100 transition duration-300 transform hover:scale-105"
+                                    onClick={() => handleDelete(user.id)}
                                 >
                                     Delete
                                 </button>
@@ -138,9 +146,10 @@ const UserProfile = () => {
                 ))}
             </div>
 
+            {/* Modal Code */}
             {isModalOpen && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-                    <div className="bg-white p-8 rounded-lg shadow-lg w-[700px] max-w-full">
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center transition-opacity duration-500 opacity-0 animate-fade-in">
+                    <div className="bg-white p-8 rounded-lg shadow-lg w-[700px] max-w-full transform scale-95 transition-all duration-300 animate-modal-enter">
                         <div className="flex justify-between items-center mb-6">
                             <h2 className="text-2xl font-semibold">
                                 {editData ? "Edit User" : "Add User"}
@@ -251,7 +260,7 @@ const UserProfile = () => {
 
                             <button
                                 type="submit"
-                                className="w-full mt-6 py-2.5 bg-blue-600 text-white rounded-lg"
+                                className="w-full mt-6 py-2.5 bg-blue-600 text-white rounded-lg transform hover:scale-105 transition duration-300"
                             >
                                 {editData ? "Update User" : "Add User"}
                             </button>

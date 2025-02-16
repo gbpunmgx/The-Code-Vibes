@@ -1,25 +1,81 @@
-import { useState, Fragment } from "react";
-import { Dialog, Transition } from "@headlessui/react";
-import { X } from "lucide-react"; // Lucide Close Icon
+import {useState, Fragment, useEffect} from "react";
+import {Dialog, Transition} from "@headlessui/react";
+import {X} from "lucide-react";
 import Input from "../components/Input";
 import TextArea from "@/app/components/TextArea";
 import DropDown from "@/app/components/DropDown";
+import {ProductRepositoryImpl} from "@/app/product/controller/ProductRepositoryImp";
+import {ProductCategory} from "@/app/product/model/ProductCategory";
+
+const productRepository = new ProductRepositoryImpl();
 
 export default function AddProductDialog() {
     const [isOpen, setIsOpen] = useState(false);
+    const [imageUrls, setImageUrls] = useState([]);
     const [productName, setProductName] = useState<string>("");
     const [productDescription, setProductDescription] = useState<string>("");
     const [productPrice, setProductPrice] = useState<string>("");
     const [category, setCategory] = useState<string>("");
-    const [productImages, setProductImages] = useState<File[]>([]); // Changed to an array of files
-    const [categories, setCategories] = useState<Array<{ id: string, name: string }>>([]);
-    const [productList, setProductList] = useState<Array<{ name: string, description: string, price: string, category: string, images: File[] }>>([]);
+    const [productImages, setProductImages] = useState<File[]>([]);
+    const [productList, setProductList] = useState<
+        Array<{
+            name: string;
+            description: string;
+            price: string;
+            category: string;
+            images: File[];
+        }>
+    >([]);
+    const [categories, setCategories] = useState<ProductCategory[]>([]);
 
-    const handleImagesChange = (e: any) => {
-        setProductImages(Array.from(e.target.files));
+    const handleImagesChange = async (event) => {
+        const files = event.target.files;
+        if (files.length === 0) return;
+
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            if (!file.type.startsWith("image/")) {
+                return;
+            }
+        }
+        const formData = new FormData();
+        Array.from(files).forEach((file) => {
+            formData.append("image", file);
+        });
+
+        formData.append("category", category);
+        try {
+            const response = await fetch("/api/upload", {
+                method: "POST",
+                body: formData,
+                headers: {} as Headers,
+            } as RequestInit);
+
+            const data = await response.json();
+            setImageUrls((prevUrls) => [...prevUrls, ...data.filePaths]);
+
+            console.log("Uploaded files:", data.filePaths);
+        } catch (error) {
+            console.error("Error uploading files:", error);
+        } finally {
+        }
     };
 
-    const handleAddProduct = () => {
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const data = await productRepository.fetchProductCategories();
+                setCategories(data);
+            } catch (err) {
+            } finally {
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    const handleAddProduct = async () => {
         const newProduct = {
             name: productName,
             description: productDescription,
@@ -27,14 +83,19 @@ export default function AddProductDialog() {
             category,
             images: productImages,
         };
-        setProductList([...productList, newProduct]);
-        setProductName("");
-        setProductDescription("");
-        setProductPrice("");
-        setCategory("");
-        setProductImages([]); // Clear the images after adding
-        setIsOpen(false);  // Close the dialog after adding a product
+        try {
+            setProductList([...productList, newProduct]);
+            setProductName("");
+            setProductDescription("");
+            setProductPrice("");
+            setCategory("");
+            setProductImages([]);
+            setIsOpen(false);
+        } catch (error) {
+        } finally {
+        }
     };
+
 
     const handleDeleteProduct = (index: number) => {
         const updatedList = productList.filter((_, i) => i !== index);
@@ -47,13 +108,12 @@ export default function AddProductDialog() {
         setProductDescription(productToEdit.description);
         setProductPrice(productToEdit.price);
         setCategory(productToEdit.category);
-        setProductImages(productToEdit.images); // Set the images when editing
+        setProductImages(productToEdit.images);
         setIsOpen(true);
     };
 
     return (
         <div className="relative">
-            {/* Row with title and Add Product button aligned to the right */}
             <div className="flex justify-between items-center mb-4">
                 <h3 className="text-xl font-semibold text-gray-800">Product List</h3>
                 <button
@@ -72,12 +132,24 @@ export default function AddProductDialog() {
                         <table className="min-w-full table-auto">
                             <thead>
                             <tr className="bg-gray-100 text-gray-600 sticky top-0">
-                                <th className="px-6 py-3 text-left text-sm font-medium">Images</th>
-                                <th className="px-6 py-3 text-left text-sm font-medium">Product Name</th>
-                                <th className="px-6 py-3 text-left text-sm font-medium">Description</th>
-                                <th className="px-6 py-3 text-left text-sm font-medium">Price</th>
-                                <th className="px-6 py-3 text-left text-sm font-medium">Category</th>
-                                <th className="px-6 py-3 text-left text-sm font-medium">Actions</th>
+                                <th className="px-6 py-3 text-left text-sm font-medium">
+                                    Images
+                                </th>
+                                <th className="px-6 py-3 text-left text-sm font-medium">
+                                    Product Name
+                                </th>
+                                <th className="px-6 py-3 text-left text-sm font-medium">
+                                    Description
+                                </th>
+                                <th className="px-6 py-3 text-left text-sm font-medium">
+                                    Price
+                                </th>
+                                <th className="px-6 py-3 text-left text-sm font-medium">
+                                    Category
+                                </th>
+                                <th className="px-6 py-3 text-left text-sm font-medium">
+                                    Actions
+                                </th>
                             </tr>
                             </thead>
                             <tbody>
@@ -88,19 +160,29 @@ export default function AddProductDialog() {
                                         index % 2 === 0 ? "bg-gray-50" : "bg-white"
                                     } hover:bg-gray-100 transition duration-200`}
                                 >
-                                    {/* Displaying product images */}
                                     <td className="px-6 py-4 text-sm">
-                                        <div className="flex gap-2">
-                                            {product.images.map((image, imgIndex) => (
-                                                <img
+                                        <div className="relative w-24 h-24">
+                                            {product.images.slice(0, 4).map((image, imgIndex) => (
+                                                <div
                                                     key={imgIndex}
-                                                    src={URL.createObjectURL(image)}
-                                                    alt={`product-image-${imgIndex}`}
-                                                    className="w-12 h-12 object-cover rounded-md"
-                                                />
+                                                    className="absolute w-20 h-20 bg-white border-4 border-white shadow-lg"
+                                                    style={{
+                                                        transform: `rotate(${(imgIndex - 1) * 8}deg)`,
+                                                        top: `${imgIndex * 6}px`,
+                                                        left: `${imgIndex * 6}px`,
+                                                        zIndex: imgIndex,
+                                                    }}
+                                                >
+                                                    <img
+                                                        src={URL.createObjectURL(image)}
+                                                        alt={`product-image-${imgIndex}`}
+                                                        className="w-full h-full object-cover"
+                                                    />
+                                                </div>
                                             ))}
                                         </div>
                                     </td>
+
                                     <td className="px-6 py-4 text-sm">{product.name}</td>
                                     <td className="px-6 py-4 text-sm">{product.description}</td>
                                     <td className="px-6 py-4 text-sm">${product.price}</td>
@@ -126,11 +208,12 @@ export default function AddProductDialog() {
                     </div>
                 )}
             </div>
-
-            {/* Dialog for Adding Product */}
             <Transition appear show={isOpen} as={Fragment}>
-                <Dialog as="div" className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
-                        onClose={() => setIsOpen(false)}>
+                <Dialog
+                    as="div"
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+                    onClose={() => setIsOpen(false)}
+                >
                     <Transition.Child
                         as={Fragment}
                         enter="transition duration-200 ease-out"
@@ -140,12 +223,14 @@ export default function AddProductDialog() {
                         leaveFrom="opacity-100 scale-100"
                         leaveTo="opacity-0 scale-90"
                     >
-                        {/* Dialog Container - Large Width with Scroll */}
-                        <div className="bg-white rounded-lg p-8 shadow-xl w-full max-w-screen-md relative overflow-y-auto max-h-[90vh]">
+                        <div
+                            className="bg-white rounded-lg p-8 shadow-xl w-full max-w-screen-md relative overflow-y-auto max-h-[90vh]">
                             <div className="flex justify-between items-center mb-4">
                                 <h3 className="text-xl font-semibold text-gray-800">Add Product</h3>
-                                <button onClick={() => setIsOpen(false)}
-                                        className="text-gray-600 hover:text-red-600 p-2 rounded-full focus:outline-none">
+                                <button
+                                    onClick={() => setIsOpen(false)}
+                                    className="text-gray-600 hover:text-red-600 p-2 rounded-full focus:outline-none"
+                                >
                                     <X className="w-6 h-6"/>
                                 </button>
                             </div>
@@ -180,24 +265,25 @@ export default function AddProductDialog() {
                                     label="Product Category"
                                     value={category}
                                     onChange={(e) => setCategory(e.target.value)}
-                                    options={categories.map((cat) => ({ id: cat.id, name: cat.name }))}
+                                    options={categories.map((cat) => ({id: cat.id, name: cat.name}))}
                                 />
                                 <div>
-                                    <label htmlFor="product-images" className="block text-sm font-medium text-gray-700">
+                                    <label
+                                        htmlFor="product-images"
+                                        className="block text-sm font-medium text-gray-700"
+                                    >
                                         Product Images
                                     </label>
                                     <input
                                         type="file"
                                         id="product-images"
                                         onChange={handleImagesChange}
-                                        multiple // Allow multiple file selection
+                                        multiple
                                         required
                                         className="mt-1 block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer focus:outline-none focus:ring-blue-500 focus:border-blue-500 p-3"
                                         accept="image/*"
                                     />
                                 </div>
-
-                                {/* Full Width Submit Button */}
                                 <button
                                     type="button"
                                     onClick={handleAddProduct}

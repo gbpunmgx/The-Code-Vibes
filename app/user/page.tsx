@@ -148,7 +148,7 @@ const UserProfile = () => {
 
             {/* Modal Code */}
             {isModalOpen && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center transition-opacity duration-500 opacity-0 animate-fade-in">
+                <div className={`fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center transition-opacity duration-500 ${isModalOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
                     <div className="bg-white p-8 rounded-lg shadow-lg w-[700px] max-w-full transform scale-95 transition-all duration-300 animate-modal-enter">
                         <div className="flex justify-between items-center mb-6">
                             <h2 className="text-2xl font-semibold">

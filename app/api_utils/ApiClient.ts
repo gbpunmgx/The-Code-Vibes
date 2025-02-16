@@ -59,7 +59,6 @@ class ApiClient {
             if (error instanceof ApiError) {
                 throw error;
             } else {
-                console.error('Unexpected Error:', error.message);
                 throw new ApiError(0, 'Unexpected API error occurred.', { error });
             }
         }

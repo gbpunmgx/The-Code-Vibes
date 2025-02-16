@@ -30,8 +30,7 @@ const subFeatures = {
         { id: "traffic", name: "Traffic", icon: <BarChart size={20} /> },
     ],
     products: [
-        { id: "product-list", name: "Product List", icon: <Package size={20} /> },
-        { id: "add-product", name: "Add Product", icon: <Package size={20} /> },
+        { id: "add-product", name: "Product", icon: <Package size={20} /> },
         { id: "inventory", name: "Inventory", icon: <Truck size={20} /> },
         { id: "categories", name: "Categories", icon: <ShoppingCart size={20} /> },
     ],

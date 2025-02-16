@@ -2,7 +2,7 @@ import React, {JSX} from "react";
 import AddProduct from "@/app/product/AddProduct";
 import {subFeatures} from "@/app/dashboard/models/FeaturesDataProvider";
 import OrderTable from "@/app/product/OrderTable";
-import AddProductCategory from "@/app/category/AddProductCategory";
+import ProductCategory from "@/app/category/AddProductCategory";
 import UserProfileForm from "@/app/user/page";
 import RoleList from "@/app/user/role";
 import UserPermissions from "@/app/setting/UserPermissions";
@@ -33,8 +33,6 @@ const FeatureContent: React.FC<AddProductProps> = ({selectedSubFeature}) => {
         sales: <div className="p-6">This is the UI for Sales</div>,
         traffic: <div className="p-6">This is the UI for Traffic</div>,
 
-        // Products Sub-Features
-        "product-list": <div className="p-6">This is the UI for Product List</div>,
         "add-product": (
             <div className="p-6">
                 <AddProduct/>
@@ -44,7 +42,7 @@ const FeatureContent: React.FC<AddProductProps> = ({selectedSubFeature}) => {
             <div className="p-6">This is the UI for Inventory Management</div>
         ),
         categories: (
-            <div className="p-6"><AddProductCategory/></div>
+            <div className="p-6"><ProductCategory/></div>
         ),
 
         // Orders Sub-Features

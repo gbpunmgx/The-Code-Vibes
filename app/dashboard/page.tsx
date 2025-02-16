@@ -74,8 +74,6 @@ const DashboardPage = () => {
                         >
                             {feature.icon}
                         </div>
-
-                        {/* Tooltip shown only on hover */}
                         <div
                             className={`absolute left-20 bg-gray-700 text-white text-sm px-2 py-1 rounded-md group-hover:block ${
                                 selectedFeature === feature.id ? "block" : "hidden"

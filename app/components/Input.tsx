@@ -9,7 +9,7 @@ interface InputProps {
     onChange: React.ChangeEventHandler<HTMLInputElement>;
     className?: string;
     type?: string;
-    error?: string; // Added error prop
+    error?: string;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -21,7 +21,7 @@ const Input: React.FC<InputProps> = ({
                                          onChange,
                                          className = '',
                                          type = 'text',
-                                         error = '' // Default error to an empty string
+                                         error = ''
                                      }) => {
     return (
         <div className="mb-5">

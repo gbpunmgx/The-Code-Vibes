@@ -25,7 +25,7 @@ const FeatureContent: React.FC<AddProductProps> = ({selectedSubFeature}) => {
         .find((sf) => sf.id === selectedSubFeature);
 
     if (!feature) {
-        return <div className="p-4 text-red-500">Unknown Sub Feature</div>;
+        return <div className="text-red-500">Unknown Sub Feature</div>;
     }
 
     const featureContentLookup: { [key: string]: JSX.Element } = {
@@ -125,7 +125,7 @@ const FeatureContent: React.FC<AddProductProps> = ({selectedSubFeature}) => {
     );
 
     return (
-        <div className="p-4 border rounded-2xl bg-white overflow-y-auto h-full">
+        <div className="rounded-2xl bg-white overflow-y-auto h-screen max-h-[calc(97vh-200px)]">
             {renderFeatureUI}
         </div>
     );

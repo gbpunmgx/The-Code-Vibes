@@ -21,8 +21,8 @@ export class ProductRepositoryImpl {
             }
             return apiResponse.result;
         } catch (error) {
-            console.error('Error fetching product categories:', error);
             throw error;
         }
     }
+
 }

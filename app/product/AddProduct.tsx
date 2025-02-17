@@ -5,7 +5,7 @@ import Input from "../components/Input";
 import TextArea from "@/app/components/TextArea";
 import DropDown from "@/app/components/DropDown";
 import {ProductRepositoryImpl} from "@/app/product/controller/ProductRepositoryImp";
-import {ProductCategory} from "@/app/product/model/ProductCategory";
+import {ProductCategory} from "@/app/category/ProductCategory";
 
 const productRepository = new ProductRepositoryImpl();
 
@@ -30,20 +30,21 @@ export default function AddProductDialog() {
 
     const handleImagesChange = async (event) => {
         const files = event.target.files;
-        if (files.length === 0) return;
+        if (!files || files.length === 0) return;
 
         for (let i = 0; i < files.length; i++) {
-            const file = files[i];
-            if (!file.type.startsWith("image/")) {
+            if (!files[i].type.startsWith("image/")) {
                 return;
             }
         }
+
         const formData = new FormData();
         Array.from(files).forEach((file) => {
             formData.append("image", file);
         });
 
         formData.append("category", category);
+
         try {
             const response = await fetch("/api/upload", {
                 method: "POST",
@@ -51,16 +52,18 @@ export default function AddProductDialog() {
                 headers: {} as Headers,
             } as RequestInit);
 
-            const data = await response.json();
-            setImageUrls((prevUrls) => [...prevUrls, ...data.filePaths]);
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error("Server Error Response:", errorText);
+            }
 
-            console.log("Uploaded files:", data.filePaths);
+            const data = await response.json();
+            console.log("Response Data:", data);
+            setImageUrls((prevUrls) => [...prevUrls, ...(Array.isArray(data.filePaths) ? data.filePaths : [])]);
         } catch (error) {
             console.error("Error uploading files:", error);
-        } finally {
         }
     };
-
 
     useEffect(() => {
         const fetchData = async () => {
@@ -89,13 +92,15 @@ export default function AddProductDialog() {
             setProductDescription("");
             setProductPrice("");
             setCategory("");
-            setProductImages([]);
+            setProductImages(productImages);
             setIsOpen(false);
         } catch (error) {
         } finally {
         }
     };
-
+    useEffect(() => {
+        console.log(productImages);
+    }, [productImages]);
 
     const handleDeleteProduct = (index: number) => {
         const updatedList = productList.filter((_, i) => i !== index);

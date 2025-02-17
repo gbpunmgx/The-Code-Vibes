@@ -1,4 +1,4 @@
-import { BASE_URL } from '@/app/config/ApiConstants';
+import {BASE_URL} from '@/app/config/ApiConstants';
 
 class ApiError extends Error {
     statusCode: number;
@@ -42,14 +42,20 @@ class ApiClient {
         try {
             const response = await fetch(`${this.baseURL}${endpoint}`, options);
 
-            let responseBody;
-            try {
-                responseBody = await response.json();
-            } catch (jsonError) {
-                throw new ApiError(response.status, 'Failed to parse JSON response.', {
-                    error: jsonError,
-                });
+            let responseBody: any = null;
+
+            // Handle empty response body, especially for status codes like 204 (No Content)
+            if (response.status !== 204) {
+                try {
+                    responseBody = await response.json();
+                } catch (jsonError) {
+                    throw new ApiError(response.status, 'Failed to parse JSON response.', {
+                        error: jsonError,
+                    });
+                }
             }
+
+            // If the response is not ok, handle the error
             if (!response.ok) {
                 this.handleHttpError(response.status, responseBody);
             }
@@ -59,7 +65,7 @@ class ApiClient {
             if (error instanceof ApiError) {
                 throw error;
             } else {
-                throw new ApiError(0, 'Unexpected API error occurred.', { error });
+                throw new ApiError(0, 'Unexpected API error occurred.', {error});
             }
         }
     }

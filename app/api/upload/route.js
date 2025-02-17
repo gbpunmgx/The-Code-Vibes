@@ -25,10 +25,8 @@ export async function POST(req) {
             await mkdir(uploadPath, { recursive: true });
             const filePath = path.join(uploadPath, newFileName);
             await writeFile(filePath, buffer);
-
-            filePaths.push(`/uploads/${category}/${newFileName}`);
+            filePaths.push(`localhost:3000/uploads/${category}/${newFileName}`);
         }
-
         return NextResponse.json({ filePaths }, { status: 200 });
     } catch (error) {
         return NextResponse.json({ error: error.message }, { status: 500 });

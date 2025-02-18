@@ -219,7 +219,6 @@ const DashboardPage = () => {
                     </div>
                 </div>
             )}
-
             <div className="flex flex-col flex-grow h-full md:h-screen overflow-auto">
                 <StickyHeader />
                 <div className="flex-grow bg-[#F0F4F7] p-4 md:p-8 m-2 md:m-4 rounded-2xl shadow-md overflow-auto">

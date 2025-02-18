@@ -31,7 +31,7 @@ export default function ProductCategoryView() {
         };
 
         loadCategories();
-    }, []); // This ensures categories are fetched only once when the component is mounted
+    }, []);
 
     const openModal = (category: ProductCategory | null = null) => {
         setEditData(category);

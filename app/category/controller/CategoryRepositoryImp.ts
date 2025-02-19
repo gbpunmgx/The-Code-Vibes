@@ -1,5 +1,5 @@
 import ApiClient from "@/app/api_utils/ApiClient";
-import {ProductCategory} from "@/app/category/ProductCategory";
+import {ProductCategory} from "@/app/category/model/ProductCategory";
 import {ApiResponseObjectBase} from "@/app/api_utils/ApiResponseObjectBase";
 
 
@@ -11,10 +11,10 @@ export class CategoryRepositoryImpl {
     }
 
     async postCategory(productCategory: ProductCategory): Promise<ApiResponseObjectBase<ProductCategory>> {
-        const productCategoryDetails: { name: string; description: string; isActive: boolean } = {
+        const productCategoryDetails: { name: string; description: string; active: boolean } = {
             name: productCategory.name,
             description: productCategory.description,
-            isActive: productCategory.isActive,
+            active: productCategory.active,
         };
         const productCategoryWithNullId = {
             ...productCategoryDetails,
@@ -22,11 +22,11 @@ export class CategoryRepositoryImpl {
         };
 
         try {
-            console.log("Posting Category:", productCategoryWithNullId); // Log the payload to confirm
-            const response = await this.apiClient.post('categories/', productCategoryWithNullId);  // Send the request with null ID
+            console.log("Posting Category:", productCategoryWithNullId);
+            const response = await this.apiClient.post('categories/', productCategoryWithNullId);
             return ApiResponseObjectBase.fromJson<ProductCategory>(
                 response,
-                (category: any) => new ProductCategory(category.id, category.name, category.description, category.isActive)
+                (category: any) => new ProductCategory(category.id, category.name, category.description, category.active)
             );
         } catch (error) {
             console.error("Error posting category:", error);
@@ -41,7 +41,7 @@ export class CategoryRepositoryImpl {
             id: productCategory.id,
             name: productCategory.name,
             description: productCategory.description,
-            isActive: productCategory.isActive,
+            active: productCategory.active,
         };
         try {
             console.log("Posting Category:", editCategory);

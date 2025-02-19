@@ -2,12 +2,12 @@ export class ProductCategory {
     id: string;
     name: string;
     description: string;
-    isActive: boolean;
+    active: boolean;
 
-    constructor(id: string, name: string, description: string, isActive: boolean) {
+    constructor(id: string, name: string, description: string, active: boolean) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.isActive = isActive;
+        this.active = active;
     }
 }

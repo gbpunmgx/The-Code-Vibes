@@ -1,4 +1,4 @@
-import { ProductCategory } from "@/app/category/ProductCategory";
+import { ProductCategory } from "@/app/category/model/ProductCategory";
 import { ApiResponseListBase } from "@/app/api_utils/ApiResponseListBase";
 import ApiClient from "@/app/api_utils/ApiClient";
 
@@ -18,7 +18,7 @@ export class ProductRepositoryImpl {
                     category.id,
                     category.name,
                     category.description,
-                    category.isActive ?? false
+                    category.active
                 )
             );
 

@@ -5,7 +5,7 @@ import Input from "../components/Input";
 import TextArea from "@/app/components/TextArea";
 import DropDown from "@/app/components/DropDown";
 import {ProductRepositoryImpl} from "@/app/product/controller/ProductRepositoryImp";
-import {ProductCategory} from "@/app/category/ProductCategory";
+import {ProductCategory} from "@/app/category/model/ProductCategory";
 
 const productRepository = new ProductRepositoryImpl();
 

@@ -10,8 +10,9 @@ import {CirclePlus, X, Sheet} from 'lucide-react';
 import {RoleRepositoryImpl} from './controller/RoleRepositoryImp';
 import {Role} from "@/app/user/model/Role";
 import * as XLSX from 'xlsx';
+import {exportToExcel} from "@/app/util/ExportToExcel";
 
-export default function ProductCategoryView() {
+export default function UserRoleView() {
     const [editableRowId, setEditableRowId] = React.useState<string | null>(null);
     const [rows, setRows] = useState<Role[]>([]);
     const [openDialog, setOpenDialog] = React.useState(false);
@@ -84,12 +85,8 @@ export default function ProductCategoryView() {
         setNewRow({...newRow, role: e.target.value});
     };
 
-    // Export to Excel
     const handleExport = () => {
-        const ws = XLSX.utils.json_to_sheet(rows); // Convert rows to a sheet
-        const wb = XLSX.utils.book_new(); // Create a new workbook
-        XLSX.utils.book_append_sheet(wb, ws, 'Roles'); // Append the sheet
-        XLSX.writeFile(wb, 'roles_data.xlsx'); // Download the file as Excel
+        exportToExcel(rows, 'roles_data.xlsx', 'Roles');
     };
 
     const columns: GridColDef[] = [

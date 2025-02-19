@@ -1,10 +1,10 @@
 import React, {JSX} from "react";
-import AddProduct from "@/app/product/AddProduct";
+import AddProduct from "@/app/product/ProductView";
 import {subFeatures} from "@/app/dashboard/models/FeaturesDataProvider";
 import OrderTable from "@/app/product/OrderTable";
-import ProductCategory from "@/app/category/AddProductCategory";
-import UserProfileForm from "@/app/user/page";
-import RoleList from "@/app/user/role";
+import ProductCategory from "@/app/category/ProductCategoryView";
+import UserProfileForm from "@/app/user/UserView";
+import RoleList from "@/app/user/UserRoleView";
 import UserPermissions from "@/app/setting/UserPermissions";
 
 interface AddProductProps {

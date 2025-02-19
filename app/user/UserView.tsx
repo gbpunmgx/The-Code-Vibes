@@ -46,7 +46,7 @@ const useUserStore = create<{
         set((state) => ({users: state.users.filter((user) => user.id !== id)})),
 }));
 
-const UserProfile = () => {
+const UserView = () => {
     const {users, addUser, updateUser, deleteUser} = useUserStore();
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [editData, setEditData] = useState<User | null>(null);
@@ -277,4 +277,4 @@ const UserProfile = () => {
     );
 };
 
-export default UserProfile;
+export default UserView;

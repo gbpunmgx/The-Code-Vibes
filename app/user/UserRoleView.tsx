@@ -6,17 +6,18 @@ import {DataGrid, GridColDef} from '@mui/x-data-grid';
 import {Box, IconButton, Tooltip} from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import {CirclePlus, X, Sheet} from 'lucide-react';
+import {CirclePlus, Sheet, X} from 'lucide-react';
 import {RoleRepositoryImpl} from './controller/RoleRepositoryImp';
 import {Role} from "@/app/user/model/Role";
-import * as XLSX from 'xlsx';
 import {exportToExcel} from "@/app/util/ExportToExcel";
 
 export default function UserRoleView() {
-    const [editableRowId, setEditableRowId] = React.useState<string | null>(null);
     const [rows, setRows] = useState<Role[]>([]);
-    const [openDialog, setOpenDialog] = React.useState(false);
-    const [newRow, setNewRow] = React.useState({role: ''});
+    const [rollInput, setRoleInput] = useState("");
+    const [openDialog, setOpenDialog] = useState(false);
+    const [isEdit, setIsEdit] = useState(false);
+    const [newRow, setNewRow] = useState<Role | null>(null);
+
     const roleRepository = new RoleRepositoryImpl();
 
     useEffect(() => {
@@ -43,22 +44,6 @@ export default function UserRoleView() {
         }
     }
 
-    const handleEdit = (id: string) => {
-        setEditableRowId(id);
-    };
-
-    const handleRowEditCommit = async (params: any) => {
-        try {
-            await roleRepository.updateRole(params.id, params.row);
-            const updatedRows = rows.map((row) =>
-                row.id === params.id ? {...row, ...params.row} : row
-            );
-            setRows(updatedRows);
-            setEditableRowId(null);
-        } catch (error) {
-            console.error('Error updating role:', error);
-        }
-    };
 
     const handleDelete = async (id: string) => {
         try {
@@ -71,23 +56,43 @@ export default function UserRoleView() {
 
     const handleAddRow = async () => {
         try {
-            const newRole = {role: newRow.role};
-            const response = await roleRepository.createRole(newRole);
-            setRows((prevRows) => [...prevRows, response.result]);
             setOpenDialog(false);
-            setNewRow({role: ''});
+            setIsEdit(false);
+            const data = new Role(newRow?.id ?? '', rollInput);  // Use rollInput for roleName
+            if (isEdit) {
+                await roleRepository.updateRole(newRow?.id ?? '', data);
+                fetchRoles()
+                    .then(() => {
+                        console.log("Roles fetched successfully");
+                    })
+                    .catch((error) => {
+                        console.error('Error fetching roles:', error);
+                    });
+            } else {
+                const response = await roleRepository.createRole(data);
+                setRows((prevRows) => [...prevRows, response.result]);
+            }
         } catch (error) {
             console.error('Error adding role:', error);
         }
     };
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setNewRow({...newRow, role: e.target.value});
-    };
 
     const handleExport = () => {
         exportToExcel(rows, 'roles_data.xlsx', 'Roles');
     };
+
+    const handleDialogAddEdit = (role: Role | null) => {
+        if (role != null) {
+            setRoleInput(role.roleName);
+            setNewRow(role);
+            setIsEdit(true);
+        } else {
+            setRoleInput("");
+        }
+        setOpenDialog(true);
+
+    }
 
     const columns: GridColDef[] = [
         {field: 'id', headerName: 'ID', width: 220},
@@ -101,7 +106,7 @@ export default function UserRoleView() {
                 <Box sx={{display: 'flex', gap: 1, justifyContent: 'center', alignItems: 'center', height: '100%'}}>
                     <Tooltip title="Edit">
                         <IconButton
-                            onClick={() => handleEdit(params.row.id)}
+                            onClick={() => handleDialogAddEdit(params.row)}
                             sx={{
                                 color: '#2196f3',
                                 backgroundColor: 'rgba(33, 150, 243, 0.08)',
@@ -136,7 +141,8 @@ export default function UserRoleView() {
 
     return (
         <div>
-            <div className="bg-white/80 backdrop-blur-lg p-6 rounded-xl shadow-sm flex justify-end items-center gap-5 border border-gray-300">
+            <div
+                className="bg-white/80 backdrop-blur-lg p-6 rounded-xl shadow-sm flex justify-end items-center gap-5 border border-gray-300">
                 <button
                     type="button"
                     className="flex items-center gap-2 px-5 py-2.5
@@ -145,16 +151,16 @@ export default function UserRoleView() {
                hover:shadow-xl active:scale-95 transition-all duration-300"
                     onClick={handleExport}
                 >
-                    <Sheet className="w-5 h-5 text-gray-200" />
+                    <Sheet className="w-5 h-5 text-gray-200"/>
                     <span className="font-semibold text-sm tracking-wide">Export</span>
                 </button>
 
                 <button
                     type="button"
                     className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg shadow-md hover:from-blue-600 hover:to-indigo-700 hover:shadow-lg active:scale-95 transition-all duration-300"
-                    onClick={() => setOpenDialog(true)}
+                    onClick={() => handleDialogAddEdit(null)}
                 >
-                    <CirclePlus className="w-5 h-5 text-white" />
+                    <CirclePlus className="w-5 h-5 text-white"/>
                     <span className="font-semibold text-sm tracking-wide">Add Role</span>
                 </button>
             </div>
@@ -185,8 +191,6 @@ export default function UserRoleView() {
                                 padding: '8px',
                             },
                         }}
-                        isCellEditable={(params) => params.row.id === editableRowId}
-                        processRowUpdate={handleRowEditCommit}
                     />
                 </div>
             </div>
@@ -207,9 +211,9 @@ export default function UserRoleView() {
                         </div>
                         <input
                             type="text"
-                            value={newRow.role}
-                            onChange={handleInputChange}
+                            value={rollInput}  // Use rollInput for the input value
                             placeholder="Enter role name"
+                            onChange={(e) => setRoleInput(e.target.value)} // Set rollInput when the input changes
                             className="w-full p-3 border rounded-md mb-6"
                         />
                         <button

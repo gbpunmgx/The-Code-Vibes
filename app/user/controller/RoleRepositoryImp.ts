@@ -2,6 +2,7 @@ import {ApiResponseObjectBase} from "@/app/api_utils/ApiResponseObjectBase";
 import ApiClient from "@/app/api_utils/ApiClient";
 import {ApiResponseListBase} from "@/app/api_utils/ApiResponseListBase";
 import {Role} from "@/app/user/model/Role";
+import {ProductCategory} from "@/app/category/model/ProductCategory";
 
 export class RoleRepositoryImpl {
     private readonly apiClient: ApiClient;
@@ -10,11 +11,11 @@ export class RoleRepositoryImpl {
         this.apiClient = apiClient ?? new ApiClient();
     }
 
-    async createRole(role: { role: string }): Promise<ApiResponseObjectBase<Role>> {
-        const roleDetails: { name: string } = {
-            name: role.role,
+    async createRole(role: Role): Promise<ApiResponseObjectBase<Role>> {
+        const roleDetails: { id: string; roleName: string; } = {
+            id: role.id,
+            roleName: role.roleName,
         };
-
         const roleWithNullId = {
             ...roleDetails,
             id: null,
@@ -25,7 +26,7 @@ export class RoleRepositoryImpl {
             const response = await this.apiClient.post('roles/', roleWithNullId);
             return ApiResponseObjectBase.fromJson<Role>(
                 response,
-                (role: any) => new Role(role.id, role.role)
+                (data: any) => new Role(data.id, data.roleName)
             );
         } catch (error) {
             console.error("Error posting role:", error);
@@ -33,10 +34,11 @@ export class RoleRepositoryImpl {
         }
     }
 
+
     async updateRole(id: string, role: Role) {
-        const editRole = {
+        const editRole: { id: string; roleName: string; } = {
             id: role.id,
-            role: role.roleName,
+            roleName: role.roleName,
         };
 
         try {

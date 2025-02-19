@@ -43,8 +43,6 @@ class ApiClient {
             const response = await fetch(`${this.baseURL}${endpoint}`, options);
 
             let responseBody: any = null;
-
-            // Handle empty response body, especially for status codes like 204 (No Content)
             if (response.status !== 204) {
                 try {
                     responseBody = await response.json();
@@ -54,8 +52,6 @@ class ApiClient {
                     });
                 }
             }
-
-            // If the response is not ok, handle the error
             if (!response.ok) {
                 this.handleHttpError(response.status, responseBody);
             }

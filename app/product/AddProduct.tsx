@@ -26,8 +26,9 @@ export default function AddProductDialog() {
             images: File[];
         }>
     >([]);
-    const [categories, setCategories] = useState<ProductCategory[]>([]);
 
+    const [categories, setCategories] = useState<ProductCategory[]>([]);
+    console.log("Rendering ui")
     const handleImagesChange = async (event) => {
         const files = event.target.files;
         if (!files || files.length === 0) return;
@@ -65,18 +66,20 @@ export default function AddProductDialog() {
         }
     };
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const data = await productRepository.fetchProductCategories();
-                setCategories(data);
-            } catch (err) {
-            } finally {
-            }
-        };
 
+    useEffect(() => {
         fetchData();
     }, []);
+
+    const fetchData = async () => {
+        try {
+            const data = await productRepository.fetchProductCategories();
+            setCategories(data);
+        } catch (err) {
+        } finally {
+        }
+    };
+
 
     const handleAddProduct = async () => {
         const newProduct = {

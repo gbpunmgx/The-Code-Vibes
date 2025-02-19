@@ -4,10 +4,10 @@ export class ApiResponseListBase<T> {
     result: T[];
 
     static fromJson<T>(json: any, transform: (item: any) => T): ApiResponseListBase<T> {
-        return {
-            status: json.status,
-            message: json.message,
-            result: json.result.map(transform),
-        };
+        const instance = new ApiResponseListBase<T>();
+        instance.status = json.status;
+        instance.message = json.message;
+        instance.result = json.result.map(transform);
+        return instance;
     }
 }

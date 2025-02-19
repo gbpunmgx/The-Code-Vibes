@@ -1,8 +1,8 @@
-import { useState } from "react";
-import { create } from "zustand";
-import { X } from "lucide-react";
+import {useState} from "react";
+import {create} from "zustand";
+import {CirclePlus, X} from "lucide-react";
+import * as React from "react";
 
-// Define types for user
 interface User {
     id: number;
     email: string;
@@ -11,8 +11,6 @@ interface User {
     lastName: string;
     role: string;
 }
-
-// Zustand store for managing users
 const useUserStore = create<{
     users: User[];
     addUser: (user: User) => void;
@@ -37,7 +35,7 @@ const useUserStore = create<{
             role: "user",
         },
     ],
-    addUser: (user) => set((state) => ({ users: [...state.users, user] })),
+    addUser: (user) => set((state) => ({users: [...state.users, user]})),
     updateUser: (updatedUser) =>
         set((state) => ({
             users: state.users.map((user) =>
@@ -45,11 +43,11 @@ const useUserStore = create<{
             ),
         })),
     deleteUser: (id) =>
-        set((state) => ({ users: state.users.filter((user) => user.id !== id) })),
+        set((state) => ({users: state.users.filter((user) => user.id !== id)})),
 }));
 
 const UserProfile = () => {
-    const { users, addUser, updateUser, deleteUser } = useUserStore();
+    const {users, addUser, updateUser, deleteUser} = useUserStore();
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [editData, setEditData] = useState<User | null>(null);
 
@@ -80,7 +78,7 @@ const UserProfile = () => {
         ).value;
         const role = (form.elements.namedItem("role") as HTMLSelectElement).value;
 
-        const user = { id: editData ? editData.id : Date.now(), email, username, firstName, lastName, role };
+        const user = {id: editData ? editData.id : Date.now(), email, username, firstName, lastName, role};
 
         console.log("Form data submitted:", user);
 
@@ -101,17 +99,23 @@ const UserProfile = () => {
         deleteUser(id);
         console.log("Deleted user with ID:", id);
     };
+    console.log("Fetching roles..."); // Debug log
 
     return (
         <div className="p-6">
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-xl font-semibold">User Profiles</h1>
-                <button
-                    className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition duration-300 ease-in-out transform hover:scale-105"
-                    onClick={() => openModal()}
-                >
-                    Add User
-                </button>
+                <div className="flex justify-end mb-4">
+                    <button
+                        type="button"
+                        className="p-8 text-white bg-gray-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                        onClick={() => openModal()}
+                    >
+                        <CirclePlus className="pr-1"/>
+                        Add Role
+                    </button>
+                </div>
+
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -148,8 +152,10 @@ const UserProfile = () => {
 
             {/* Modal Code */}
             {isModalOpen && (
-                <div className={`fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center transition-opacity duration-500 ${isModalOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
-                    <div className="bg-white p-8 rounded-lg shadow-lg w-[700px] max-w-full transform scale-95 transition-all duration-300 animate-modal-enter">
+                <div
+                    className={`fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center transition-opacity duration-500 ${isModalOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
+                    <div
+                        className="bg-white p-8 rounded-lg shadow-lg w-[700px] max-w-full transform scale-95 transition-all duration-300 animate-modal-enter">
                         <div className="flex justify-between items-center mb-6">
                             <h2 className="text-2xl font-semibold">
                                 {editData ? "Edit User" : "Add User"}
@@ -158,10 +164,9 @@ const UserProfile = () => {
                                 className="text-gray-500 hover:text-white p-2 rounded hover:bg-gray-700"
                                 onClick={closeModal}
                             >
-                                <X className="h-6 w-6" />
+                                <X className="h-6 w-6"/>
                             </button>
                         </div>
-
                         <form onSubmit={handleSubmit}>
                             <div className="mb-4">
                                 <label

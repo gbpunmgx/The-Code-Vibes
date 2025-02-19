@@ -3,6 +3,7 @@ const OrderTable = () => {
     { id: 1, customer: 'John Doe', total: '$200', status: 'Pending' },
     { id: 2, customer: 'Jane Smith', total: '$350', status: 'Shipped' },
   ];
+  console.log("Rendering ui")
 
   return (
     <div className="">

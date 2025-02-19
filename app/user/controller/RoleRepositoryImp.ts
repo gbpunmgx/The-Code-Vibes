@@ -1,7 +1,7 @@
-import {ProductCategory} from "@/app/category/ProductCategory";
 import {ApiResponseObjectBase} from "@/app/api_utils/ApiResponseObjectBase";
 import ApiClient from "@/app/api_utils/ApiClient";
-
+import {ApiResponseListBase} from "@/app/api_utils/ApiResponseListBase";
+import {Role} from "@/app/user/model/Role";
 
 export class RoleRepositoryImpl {
     private readonly apiClient: ApiClient;
@@ -10,54 +10,67 @@ export class RoleRepositoryImpl {
         this.apiClient = apiClient ?? new ApiClient();
     }
 
-    async createRole(productCategory: ProductCategory): Promise<ApiResponseObjectBase<ProductCategory>> {
-        const productCategoryDetails: { name: string; description: string; isActive: boolean } = {
-            name: productCategory.name,
-            description: productCategory.description,
-            isActive: productCategory.isActive,
+    async createRole(role: { role: string }): Promise<ApiResponseObjectBase<Role>> {
+        const roleDetails: { name: string } = {
+            name: role.role,
         };
-        const productCategoryWithNullId = {
-            ...productCategoryDetails,
+
+        const roleWithNullId = {
+            ...roleDetails,
             id: null,
         };
 
         try {
-            console.log("Posting Category:", productCategoryWithNullId); // Log the payload to confirm
-            const response = await this.apiClient.post('categories/', productCategoryWithNullId);  // Send the request with null ID
-            return ApiResponseObjectBase.fromJson<ProductCategory>(
+            console.log("Posting Role:", roleWithNullId);
+            const response = await this.apiClient.post('roles/', roleWithNullId);
+            return ApiResponseObjectBase.fromJson<Role>(
                 response,
-                (category: any) => new ProductCategory(category.id, category.name, category.description, category.isActive)
+                (role: any) => new Role(role.id, role.role)
             );
         } catch (error) {
-            console.error("Error posting category:", error);
+            console.error("Error posting role:", error);
             throw error;
         }
     }
 
-
-    async updateRole(id: String, productCategory: ProductCategory) {
-
-        const editCategory = {
-            id: productCategory.id,
-            name: productCategory.name,
-            description: productCategory.description,
-            isActive: productCategory.isActive,
+    async updateRole(id: string, role: Role) {
+        const editRole = {
+            id: role.id,
+            role: role.roleName,
         };
+
         try {
-            console.log("Posting Category:", editCategory);
-            await this.apiClient.put('categories/' + id, productCategory);
+            console.log("Updating Role:", editRole);
+            await this.apiClient.put('roles/' + id, editRole);
         } catch (error) {
-            console.error("Error posting category:", error);
+            console.error("Error updating role:", error);
             throw error;
         }
     }
 
     async deleteRole(id: string) {
         try {
-           await this.apiClient.delete('categories/' + id);
+            await this.apiClient.delete('roles/' + id);
+        } catch (error) {
+            console.error("Error deleting role:", error);
+            throw error;
+        }
+    }
+
+    async getRoles(): Promise<Role[]> {
+        try {
+            const response = await this.apiClient.get('roles/');
+            const apiResponse = ApiResponseListBase.fromJson<Role>(
+                response,
+                (role: any) => new Role(role.id, role.roleName)
+            );
+            if (apiResponse.status !== 200) {
+                throw new Error(`Error: ${apiResponse.message}`);
+            }
+            return apiResponse.result;
 
         } catch (error) {
-            console.error("Error deleting category:", error);
+            console.error('Error fetching roles:', error);
             throw error;
         }
     }

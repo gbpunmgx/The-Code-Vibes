@@ -1,19 +1,27 @@
 export class ProductModel {
-    id: number;
+    id: string;
     name: string;
     description: string;
     price: number;
-    category: string;
-    createdAt: Date;
-    updatedAt: Date;
+    active: boolean;
+    categoryId: string;
+    images: string[];
 
-    constructor(productData: any) {
-        this.id = productData.id;
-        this.name = productData.name;
-        this.description = productData.description;
-        this.price = productData.price;
-        this.category = productData.category;
-        this.createdAt = new Date(productData.createdAt);
-        this.updatedAt = new Date(productData.updatedAt);
+    constructor(
+        id: string,
+        name: string,
+        description: string,
+        price: number,
+        active: boolean,
+        categoryId: string,
+        images: string[]
+    ) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.active = active;
+        this.categoryId = categoryId;
+        this.images = images;
     }
 }

@@ -72,3 +72,5 @@ my-nextjs-app/
 ├── next.config.js       # Next.js configuration
 ├── package.json         # Dependencies and scripts
 └── tsconfig.json        # TypeScript configuration
+
+

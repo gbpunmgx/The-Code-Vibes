@@ -1,5 +1,5 @@
 import ApiClient from "@/app/api_utils/ApiClient";
-import {ProductCategory} from "@/app/category/model/ProductCategory";
+import {ProductCategory} from "@/app/product/category/model/ProductCategory";
 import {ApiResponseObjectBase} from "@/app/api_utils/ApiResponseObjectBase";
 
 

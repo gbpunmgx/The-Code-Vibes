@@ -1,11 +1,26 @@
 import React, {JSX} from "react";
-import AddProduct from "@/app/product/ProductView";
+import AddProduct from "@/app/product/product_list/ProductView";
 import {subFeatures} from "@/app/dashboard/models/FeaturesDataProvider";
 import OrderTable from "@/app/product/OrderTable";
-import ProductCategory from "@/app/category/ProductCategoryView";
+import ProductCategory from "@/app/product/category/ProductCategoryView";
 import UserProfileForm from "@/app/user/UserView";
 import RoleList from "@/app/user/UserRoleView";
-import UserPermissions from "@/app/setting/UserPermissions";
+import UserPermissions from "@/app/settings/user_permission/UserPermissions";
+import InventoryView from "@/app/product/inventory/InventoryView";
+import DiscountCouponsView from "@/app/campaigns/discount_coupon/DiscountCouponsView";
+import ReferralProgramView from "@/app/campaigns/referral_program/ReferralProgramView";
+import SmsCampaignView from "@/app/campaigns/sms_campaings/SmsCampaignView";
+import AllOrders from "@/app/product_order/all_product_order/ProductOrder";
+import PendingOrdersView from "@/app/product_order/pending_order/PendingOrderView";
+import CompletedOrdersView from "@/app/product_order/completed_order/CompletedOrderView";
+import OrderHistoryView from "@/app/product_order/order_history/OrderHistoryView";
+import CustomerListView from "@/app/customer/customer_list/CustomerListView";
+import CustomerSegmentationView from "@/app/customer/customer_segmentation/CustomerSegmentationView";
+import LoyaltyProgramView from "@/app/customer/loyalty_program/LoyaltyProgramView";
+import SiteSettingsView from "@/app/settings/site_setting/SiteSettingsView";
+import PaymentSettingsView from "@/app/settings/payment_setting/PaymentSettingView";
+import DashboardOverview from "@/app/dashboard/dashboard_overview/DashboardOverview";
+import SalesDashboard from "@/app/dashboard/sales/SalesDashboardView";
 
 interface AddProductProps {
     selectedSubFeature: string | null;
@@ -29,8 +44,8 @@ const FeatureContent: React.FC<AddProductProps> = ({selectedSubFeature}) => {
     }
 
     const featureContentLookup: { [key: string]: JSX.Element } = {
-        overview: <div className="p-6">This is the UI for Overview</div>,
-        sales: <div className="p-6">This is the UI for Sales</div>,
+        overview: <div className="p-6"><DashboardOverview/></div>,
+        sales: <div className="p-6"><SalesDashboard/></div>,
         traffic: <div className="p-6">This is the UI for Traffic</div>,
 
         "add-product": (
@@ -39,7 +54,7 @@ const FeatureContent: React.FC<AddProductProps> = ({selectedSubFeature}) => {
             </div>
         ),
         inventory: (
-            <div className="p-6">This is the UI for Inventory Management</div>
+            <div className="p-6"><InventoryView/></div>
         ),
         categories: (
             <div className="p-6"><ProductCategory/></div>
@@ -48,28 +63,28 @@ const FeatureContent: React.FC<AddProductProps> = ({selectedSubFeature}) => {
         // Orders Sub-Features
         "all-orders": (
             <div className="p-6">
-                <OrderTable/>
+                <AllOrders/>
             </div>
         ),
         "pending-orders": (
-            <div className="p-6">This is the UI for Pending Orders</div>
+            <div className="p-6"><PendingOrdersView/></div>
         ),
         "completed-orders": (
-            <div className="p-6">This is the UI for Completed Orders</div>
+            <div className="p-6"><CompletedOrdersView/></div>
         ),
         "order-history": (
-            <div className="p-6">This is the UI for Order History</div>
+            <div className="p-6"><OrderHistoryView/></div>
         ),
 
         // Customers Sub-Features
         "customer-list": (
-            <div className="p-6">This is the UI for Customer List</div>
+            <div className="p-6"><CustomerListView/></div>
         ),
         "customer-segmentation": (
-            <div className="p-6">This is the UI for Customer Segmentation</div>
+            <div className="p-6"><CustomerSegmentationView/></div>
         ),
         "loyalty-program": (
-            <div className="p-6">This is the UI for Loyalty Program</div>
+            <div className="p-6"><LoyaltyProgramView/></div>
         ),
 
         // Analytics Sub-Features
@@ -91,13 +106,13 @@ const FeatureContent: React.FC<AddProductProps> = ({selectedSubFeature}) => {
             <div className="p-6">This is the UI for Email Campaigns</div>
         ),
         "sms-campaigns": (
-            <div className="p-6">This is the UI for SMS Campaigns</div>
+            <div className="p-6"><SmsCampaignView/></div>
         ),
         "discount-coupons": (
-            <div className="p-6">This is the UI for Discount Coupons</div>
+            <div className="p-6"><DiscountCouponsView/></div>
         ),
         "referral-program": (
-            <div className="p-6">This is the UI for Referral Program</div>
+            <div className="p-6"><ReferralProgramView/>></div>
         ),
         "user": (
             <div className="p-6"><UserProfileForm/></div>
@@ -107,10 +122,10 @@ const FeatureContent: React.FC<AddProductProps> = ({selectedSubFeature}) => {
 
         // Settings Sub-Features
         "site-settings": (
-            <div className="p-6">This is the UI for Site Settings</div>
+            <div className="p-6"><SiteSettingsView/></div>
         ),
         "payment-settings": (
-            <div className="p-6"></div>
+            <div className="p-6"><PaymentSettingsView/></div>
         ),
         "shipping-settings": (
             <div className="p-6">This is the UI for Shipping Settings</div>

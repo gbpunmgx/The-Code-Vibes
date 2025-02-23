@@ -57,23 +57,6 @@ const UserPermissions = () => {
 
     return (
         <div className="space-y-6">
-            <div className="w-full bg-white flex px-4 py-2 rounded-full border border-blue-500 overflow-hidden max-w-md mx-auto font-[sans-serif]">
-                <input
-                    type="text"
-                    placeholder="Search User"
-                    value={searchQuery}
-                    onChange={handleSearchChange}
-                    className="flex-1 outline-none bg-white pl-4 text-sm"
-                />
-                <button
-                    type="button"
-                    className="bg-blue-600 hover:bg-blue-700 transition-all text-white text-sm rounded-full px-5 py-2.5"
-                >
-                    Search
-                </button>
-            </div>
-
-            {/* Table to display users */}
             <div className="overflow-x-auto mt-6">
                 <table className="min-w-full table-auto">
                     <thead className="bg-gray-200">

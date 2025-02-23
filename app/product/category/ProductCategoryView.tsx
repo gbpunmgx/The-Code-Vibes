@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from "react";
-import {ProductRepositoryImpl} from "../product/controller/ProductRepositoryImp";
-import {ProductCategory} from "@/app/category/model/ProductCategory";
+import {ProductRepositoryImpl} from "../controller/ProductRepositoryImp";
+import {ProductCategory} from "@/app/product/category/model/ProductCategory";
 import {CirclePlus, Sheet, X} from "lucide-react";
-import {CategoryRepositoryImpl} from "@/app/category/controller/CategoryRepositoryImp";
+import {CategoryRepositoryImpl} from "@/app/product/category/controller/CategoryRepositoryImp";
 import {DataGrid, GridColDef} from "@mui/x-data-grid";
 import {Box, IconButton, Tooltip} from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
@@ -102,7 +102,7 @@ export default function ProductCategoryView() {
 
     const columns: GridColDef[] = [
         {field: 'id', headerName: 'ID', width: 220},
-        {field: 'name', headerName: 'Role', width: 200, editable: false},
+        {field: 'name', headerName: 'Name', width: 200, editable: false},
         {field: 'description', headerName: 'Description', width: 400, editable: false},
         {
             field: 'active',

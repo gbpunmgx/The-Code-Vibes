@@ -2,7 +2,7 @@ import {ApiResponseObjectBase} from "@/app/api_utils/ApiResponseObjectBase";
 import ApiClient from "@/app/api_utils/ApiClient";
 import {ApiResponseListBase} from "@/app/api_utils/ApiResponseListBase";
 import {Role} from "@/app/user/model/Role";
-import {ProductCategory} from "@/app/category/model/ProductCategory";
+import {ProductCategory} from "@/app/product/category/model/ProductCategory";
 
 export class RoleRepositoryImpl {
     private readonly apiClient: ApiClient;

@@ -23,9 +23,8 @@ const StickyHeader = () => {
     }, []);
 
     return (
-        <div className="sticky top-0 flex justify-end bg-white  px-6 py-3 border-b border-gray-200 relative z-50">
+        <div className="sticky top-0 flex justify-end px-6 py-3 relative z-50">
             <div className="flex items-center gap-6">
-                {/* Notification Button */}
                 <div
                     className="relative"
                     onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
@@ -33,16 +32,13 @@ const StickyHeader = () => {
 
                     <button type="button"
                             className="relative inline-flex items-center p-2 text-sm font-medium text-center text-white  rounded-lg">
-                        <button className="text-gray-600 hover:text-black transition-colors duration-200">
-                            <Bell size={28}/>
-                        </button>
+                            <Bell size={28} className="text-gray-600 hover:text-black transition-colors duration-200"/>
                         <span className="sr-only">Notifications</span>
                         <div
                             className="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-2 -end-2 dark:border-gray-900">20
                         </div>
                     </button>
 
-                    {/* Notification Dropdown */}
                     {isNotificationsOpen && (
                         <div
                             id="notification-dropdown"
@@ -54,19 +50,16 @@ const StickyHeader = () => {
                                 </p>
                             </div>
                             <ul className="py-2 text-sm text-gray-700">
-                                {/* Notification 1 */}
                                 <li className="flex items-center px-4 py-3 hover:bg-gray-100 cursor-pointer">
                                     <span className="w-2.5 h-2.5 bg-blue-500 rounded-full mr-3"/>
                                     <span className="flex-1">New comment on your post</span>
                                     <span className="text-xs text-gray-500">5 min ago</span>
                                 </li>
-                                {/* Notification 2 */}
                                 <li className="flex items-center px-4 py-3 hover:bg-gray-100 cursor-pointer">
                                     <span className="w-2.5 h-2.5 bg-green-500 rounded-full mr-3"/>
                                     <span className="flex-1">New follower: John Doe</span>
                                     <span className="text-xs text-gray-500">10 min ago</span>
                                 </li>
-                                {/* Notification 3 */}
                                 <li className="flex items-center px-4 py-3 hover:bg-gray-100 cursor-pointer">
                                     <span className="w-2.5 h-2.5 bg-red-500 rounded-full mr-3"/>
                                     <span className="flex-1">Your subscription is expiring soon</span>
@@ -81,7 +74,6 @@ const StickyHeader = () => {
                     )}
                 </div>
 
-                {/* User Profile */}
                 <div
                     className="relative flex items-center gap-3 cursor-pointer hover:bg-gray-100 px-3 py-2 rounded-lg transition"
                     onClick={() => setIsUserOpen(!isUserOpen)}
@@ -95,7 +87,6 @@ const StickyHeader = () => {
                     <ChevronDown size={20} className="text-gray-600"/>
                 </div>
 
-                {/* User Dropdown Menu */}
                 {isUserOpen && (
                     <div
                         id="user-dropdown"
